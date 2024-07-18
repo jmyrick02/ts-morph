@@ -1242,7 +1242,7 @@ function getImmediateDerivedClasses(classDec: ClassLikeDeclarationBaseSpecific &
     return classes;
 
   for (const node of nameNode.findReferencesAsNodes()) {
-    const nodeParent = node.getParentIfKind(SyntaxKind.ExpressionWithTypeArguments);
+    const nodeParent = node.getFirstAncestorByKind(SyntaxKind.ExpressionWithTypeArguments);
     if (nodeParent == null)
       continue;
     const heritageClause = nodeParent.getParentIfKind(SyntaxKind.HeritageClause);

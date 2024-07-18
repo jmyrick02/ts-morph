@@ -27,6 +27,7 @@ import {
 } from "../../../../../structures";
 import { WriterFunction } from "../../../../../types";
 import { getInfoFromText, getInfoFromTextWithDescendant, OptionalKindAndTrivia } from "../../../testHelpers";
+import { Project } from "../../../../../main";
 
 describe("ClassLikeDeclarationBase", () => {
   function getInfoFromTextForClassLike(text: string) {
@@ -1715,6 +1716,15 @@ class Child extends Mixin(Base) {}
 
     it("should get the class descendants when there are none", () => {
       doTest("class Base {} class Child1 extends Base {} class Child2 extends Base {} class Grandchild1 extends Child1 {}", "Grandchild1", []);
+    });
+
+    it("should get the class descendants when a subclass extends via a PropertyAccessExpression", () => {
+      const project = new Project();
+      const sourceFile1 = project.createSourceFile("test.ts", `export class ExampleClass {}`);
+      project.createSourceFile("test2.ts", `import * as test from "./test"; class ExampleSubclass extends test.ExampleClass {};`);
+
+      const classes = sourceFile1.getClassOrThrow("ExampleClass").getDerivedClasses();
+      expect(classes.map(c => c.getName())).to.deep.equal(["ExampleSubclass"]);
     });
   });
 });
