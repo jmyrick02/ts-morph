@@ -183,11 +183,15 @@ export class StringUtils {
 
         // indentation for spaces rounds up to the nearest tab size multiple
         const indentWidth = Math.ceil(spacesCount / indentSizeInSpaces) * indentSizeInSpaces + tabsCount * indentSizeInSpaces;
-        if (minIndentWidth == null || indentWidth < minIndentWidth)
+        if (str.charCodeAt(i) !== CharCodes.NEWLINE && (minIndentWidth == null || indentWidth < minIndentWidth))
           minIndentWidth = indentWidth;
 
         endPositions.push(i);
         isAtStartOfLine = false;
+
+        // this check is needed for lines that are empty or consist purely of spaces/tabs
+        if (str.charCodeAt(i) === CharCodes.NEWLINE)
+          i--;
       }
     }
 

@@ -331,6 +331,14 @@ describe("StringUtils", () => {
       str += "\n    other";
       doTest(str, "this is a `\n    test`\nother", { isInStringAtPos: index => index >= pos && index < end });
     });
+
+    it("should handle lines that only have indentation", () => {
+      doTest("  test\n  \n  test", "test\n\ntest", { indentSizeInSpaces: 2 });
+    });
+
+    it("should ignore empty lines", () => {
+      doTest("  test\n\n  test", "test\n\ntest", { indentSizeInSpaces: 2 });
+    });
   });
 
   describe(nameof(StringUtils, "indent"), () => {
